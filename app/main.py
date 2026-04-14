@@ -7,7 +7,7 @@ from __future__ import annotations
 import streamlit as st
 
 from app.config import INSTRUMENTS
-from app.ui import chart_panel
+from app.ui import chart_panel, news_panel
 
 st.set_page_config(
     page_title="Futures Terminal",
@@ -36,10 +36,14 @@ def main() -> None:
 
     st.title(f"{inst.symbol} — {inst.name}")
 
-    chart_panel.render(symbol)
+    left, right = st.columns([3, 2])
+    with left:
+        chart_panel.render(symbol)
+    with right:
+        news_panel.render(symbol)
 
     st.divider()
-    st.caption("News, positioning, macro, and sentiment panels coming next.")
+    st.caption("Positioning, macro, and sentiment panels coming next.")
 
 
 if __name__ == "__main__":
