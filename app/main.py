@@ -4,6 +4,15 @@ Run: streamlit run app/main.py
 """
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
+# Streamlit runs this file with app/ on sys.path — add the project root
+# so absolute `from app....` imports resolve.
+_ROOT = Path(__file__).resolve().parent.parent
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
+
 import streamlit as st
 
 from app.config import INSTRUMENTS, has_anthropic, has_reddit, has_fred
