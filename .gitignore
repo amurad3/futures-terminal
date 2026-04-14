@@ -1,0 +1,17 @@
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.env.local
+.DS_Store
+data/cache/*.json
+data/cache/*.csv
+data/cache/*.parquet
+!data/cache/.gitkeep
+.streamlit/secrets.toml
+.idea/
+.vscode/
+*.log
