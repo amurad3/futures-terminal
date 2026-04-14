@@ -6,8 +6,15 @@ from __future__ import annotations
 
 import streamlit as st
 
-from app.config import INSTRUMENTS
-from app.ui import chart_panel, news_panel, sentiment_panel
+from app.config import INSTRUMENTS, has_anthropic, has_reddit, has_fred
+from app.ui import (
+    chart_panel,
+    cot_panel,
+    macro_panel,
+    news_panel,
+    sentiment_panel,
+    social_panel,
+)
 
 st.set_page_config(
     page_title="Futures Terminal",
@@ -26,7 +33,12 @@ def sidebar() -> str:
         format_func=lambda s: f"{s} — {INSTRUMENTS[s].name}",
     )
     st.sidebar.divider()
-    st.sidebar.caption("Panels are loaded lazily. Data sources are free/open.")
+    st.sidebar.caption("**Integrations**")
+    st.sidebar.write(f"- Claude (Deep Analyze): {'✅' if has_anthropic() else '⚠ missing key'}")
+    st.sidebar.write(f"- Reddit: {'✅' if has_reddit() else '⚠ missing keys'}")
+    st.sidebar.write(f"- FRED: {'✅ keyed' if has_fred() else '◌ using no-key CSV'}")
+    st.sidebar.divider()
+    st.sidebar.caption("All price/news/CFTC sources are free. Add keys in `.env` for Reddit + Claude deep analysis.")
     return symbol
 
 
@@ -36,17 +48,24 @@ def main() -> None:
 
     st.title(f"{inst.symbol} — {inst.name}")
 
-    sentiment_panel.render(symbol)
-    st.divider()
+    tabs = st.tabs(["📊 Overview", "📰 News", "💬 Social", "🏦 Positioning", "🌐 Macro"])
 
-    left, right = st.columns([3, 2])
-    with left:
+    with tabs[0]:
+        sentiment_panel.render(symbol)
+        st.divider()
         chart_panel.render(symbol)
-    with right:
+
+    with tabs[1]:
         news_panel.render(symbol)
 
-    st.divider()
-    st.caption("Positioning + macro panels coming next.")
+    with tabs[2]:
+        social_panel.render(symbol)
+
+    with tabs[3]:
+        cot_panel.render(symbol)
+
+    with tabs[4]:
+        macro_panel.render()
 
 
 if __name__ == "__main__":
