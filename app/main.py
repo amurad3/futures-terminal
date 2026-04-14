@@ -7,6 +7,7 @@ from __future__ import annotations
 import streamlit as st
 
 from app.config import INSTRUMENTS
+from app.ui import chart_panel
 
 st.set_page_config(
     page_title="Futures Terminal",
@@ -34,14 +35,11 @@ def main() -> None:
     inst = INSTRUMENTS[symbol]
 
     st.title(f"{inst.symbol} — {inst.name}")
-    st.caption("Scaffold in progress. Panels will appear here as data sources are wired up.")
 
-    cols = st.columns(3)
-    cols[0].metric("Price", "—")
-    cols[1].metric("Change", "—")
-    cols[2].metric("Volume", "—")
+    chart_panel.render(symbol)
 
-    st.info("Next: price chart panel, news feed, CFTC positioning, sentiment.")
+    st.divider()
+    st.caption("News, positioning, macro, and sentiment panels coming next.")
 
 
 if __name__ == "__main__":
